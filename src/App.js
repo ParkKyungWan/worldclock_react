@@ -11,61 +11,78 @@ import './App.css';
 //   );
 // }
 
-class WorldClock extends Component{
-  constructor(props){
+class WorldClock extends Component {
+  constructor(props) {
     super(props)
     this.state = {
-      time : this.props.time,
-      minute : 0
+      time: this.props.time,
+      minute: 0
     }
 
-    this.timer = setInterval( ()=>{
-      this.setState((state)=>(
-        state.minute === 59 ? 
-        
-        {
-          minute:0,
-          time:state.time + 1
-        }
-        :{minute : state.minute + 1} 
-      
+    this.timer = setInterval(() => {
+      this.setState((state) => (
+        state.minute === 59 ?
+
+          {
+            minute: 0,
+            time: state.time + 1
+          }
+          : { minute: state.minute + 1 }
+
       ))
     }
-    ,100)
-  
+      , 100)
+
   }
 
-  stopthis = (event) =>{
+  stopthis = (event) => {
     clearInterval(this.timer);
   }
-  render(){
+  render() {
     return (
-          <div className="WorldClock">
-            <h3>도시: {this.props.city}</h3>
-            <p>시간: {this.state.time} 시 {this.state.minute} </p>
-            <button onClick={this.stopthis}>멈췃!</button>
-          </div>
+      <div className="WorldClock">
+        <h3>도시: {this.props.city}</h3>
+        <p>시간: {this.state.time} 시 {this.state.minute} </p>
+        <button onClick={this.stopthis}>멈췃!</button>
+      </div>
     );
   }
-  
+
 }
 
-function App() {
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.cityTimeData = [
+      ['서울', 10],
+      ['서울근처', 8],
+      ['서울근처의근처', 5],
+    ]
+    this.state = {
+      content: '',
+    }
+    this.WorldClockList = this.cityTimeData.map((citytime, index) =>
+      (<WorldClock city={citytime[0]} time={citytime[1]} key={index} />)
+    )
+  }
+  ChangeContent = (event) => {
+    this.setState({
+      content: event.target.value
+    })
+  }
 
-  const cityTimeData = [
-    ['서울', 10],
-    ['서울근처', 8],
-    ['서울근처의근처', 5],
-  ]
-  const WorldClockList = cityTimeData.map( (citytime,index)=>
-    (<WorldClock city = {citytime[0]} time = {citytime[1]} key = {index} />)
-  )
-  return (
-    <div className="App">
-      <h1>세계 시간!!</h1><br/>
-      {WorldClockList}
-    </div>
-  );
+  render() {
+    return (
+      <div className="App">
+        <br />
+        <h1>1 - 무언가를 입력해보세요</h1>
+        <textarea value={this.state.content} onChange={this.ChangeContent} />
+        <p>state.content : {this.state.content}</p>
+        <h1>2 - 세계 시간!!</h1><br />
+        {this.WorldClockList}
+      </div>
+    );
+  }
 }
 
 
